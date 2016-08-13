@@ -2,6 +2,14 @@ require './test/test_helper'
 
 include PunchCard::Formats
 describe 'ASCII8' do
+  it 'should fail gracefully if there is too much data to encode' do
+    string = Array.new(81) { |_i| 'A' }.join
+
+    assert_raises InsufficientCardSpace do
+      PunchCard::Encodings::ASCII8.encode(string, IBM5081)
+    end
+  end
+
   it 'should encode the alphabet in upper case' do
     letters = ('A'..'Z').to_a.join('')
     card    = PunchCard::Encodings::ASCII8.encode(letters, IBM5081)
@@ -32,7 +40,17 @@ describe 'ASCII8' do
 
       assert card_str == expected,
              "The card did not encode the letter '#{l}'. " \
-            "Column was #{card_str}; should have been #{expected}."
+             "Column was #{card_str}; should have been #{expected}."
     end
+  end
+
+  it 'should decode the alphabet in upper case' do
+    expected = ('A'..'Z').to_a.join('')
+    card = PunchCard::Encodings::ASCII8.encode(expected, IBM5081)
+
+    letters = PunchCard::Encodings::ASCII8.decode(card)
+    assert letters.rstrip == expected,
+           'The card did not decode successfully. ' \
+     			"The card decoded to #{letters}; should have been #{expected}."
   end
 end

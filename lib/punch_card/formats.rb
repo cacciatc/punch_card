@@ -1,3 +1,5 @@
+require 'date'
+
 module PunchCard
   PUNCH = 1
   CLEAR = 0
@@ -11,6 +13,15 @@ module PunchCard
       end
     end
 
+    # You just want to put ALL the things on the card don't you?!
+    class InsufficientCardSpace < StandardError
+      def self.create(format, string)
+        msg = "This #{format} does not contain enough space to /
+					encode \"#{string}\"."
+        InsufficientCardSpace.new(msg)
+      end
+    end
+
     # Classic 80x12
     class IBM5081
       extend Forwardable
@@ -18,22 +29,35 @@ module PunchCard
       ROWS = 12
       COLS = 80
 
+      attr_accessor :comments
       def initialize
         @a = Array.new(COLS) { Array.new(ROWS) { CLEAR } }
+        @comments = ''
       end
 
       def_delegator :@a, :[], :[]
       def_delegator :@a, :length, :length
       def_delegator :@a, :each, :each
+      def_delegator :@a, :inject, :inject
 
-      def to_txt(fname)
-        File.open(fname, 'w') do |f|
-          rows = to_rows
-          f.puts(format_row(rows[11], 11))
-          f.puts(format_row(rows[10], 10))
+      def to_txt(fname = nil)
+        rows = to_rows
 
-          rows[0..ROWS - 2].each_with_index do |row, i|
-            f.puts(format_row(row, i))
+        date = DateTime.now.strftime('%d %B %Y - %H:%M:%S')
+        str  = "IBM 5081 created #{date}\n"
+        str += "#{comments.chars.join(' ')}\n"
+        str += format_row(rows[11], 11) + "\n"
+        str += format_row(rows[10], 10) + "\n"
+
+        rows[0..ROWS - 2].each_with_index do |row, i|
+          str += format_row(row, i) + "\n"
+        end
+
+        if fname.nil?
+          str
+        else
+          File.open(fname, 'w') do |f|
+            f.puts str
           end
         end
       end

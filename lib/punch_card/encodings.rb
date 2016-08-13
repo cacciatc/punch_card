@@ -1,4 +1,7 @@
+require_relative 'ascii8'
+
 module PunchCard
+  # Contains all the supported encodings.
   module Encodings
     # You just want ALL the characters don't you?!
     class UnsupportedCharacter < StandardError
@@ -8,39 +11,36 @@ module PunchCard
       end
     end
 
-    # Good ole 8-bit ASCII
-    module ASCII8
-      def self.encode(str, format)
-        if format == Formats::IBM5081
-          encode_IBM5081(str, format.new)
-        else
-          raise UnsupportedCardFormat.create(format)
+    # Sorry we just can't decode it.
+    class UndecodableCharacter < StandardError
+      def self.create(pattern, encoding)
+        msg = "#{encoding} does not know of the pattern '#{pattern}'."
+        UndecodableCharacter.new(msg)
+      end
+    end
+
+    # Represents a symbol in a column
+    class EncodingSymbol
+      attr_reader :symbol
+      # TODO: assumes 12 rows per col, should be flexible
+      def initialize(pattern, symbol)
+        @pattern = pattern
+        @symbol  = symbol
+        @col     = Array.new(12) { CLEAR }
+
+        @pattern.each do |row|
+          @col[row] = PUNCH
         end
       end
 
-      def self.encode_IBM5081(str, card)
-        col = 0
-        str.each_char do |c|
-          case c
-          when 'A'..'I'
-            card[col][11] = PUNCH
-            card[col][c.ord - 'A'.ord + 1] = PUNCH
-          when 'J'..'R'
-            card[col][10] = PUNCH
-            card[col][c.ord - 'J'.ord + 1] = PUNCH
-          when '/'
-            card[col][0] = PUNCH
-            card[col][0] = PUNCH
-          when 'S'..'Z'
-            card[col][0] = PUNCH
-            card[col][c.ord + 1 - 'S'.ord + 1] = PUNCH
-          else
-            raise UnsupportedCharacter.create(c, ASCII8)
-          end
-          col += 1
-        end
+      def decodable?(col)
+        col == @col
+      end
 
-        card
+      def punch(card, col)
+        @pattern.each do |row|
+          card[col][row] = PUNCH
+        end
       end
     end
   end
