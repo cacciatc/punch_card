@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = PunchCard::VERSION
   spec.authors       = ['Chris Cacciatore']
   spec.email         = ['chris.cacciatore@gmail.com']
-  spec.summary       = 'TODO: Write a short summary. Required.'
-  spec.description   = 'TODO: Write a longer description. Optional.'
+  spec.summary       = 'For all those punch cards you have laying around.'
+  spec.description   = 'Create punch cards in various formats and save as PNGs.'
   spec.homepage      = ''
   spec.license       = 'MIT'
 

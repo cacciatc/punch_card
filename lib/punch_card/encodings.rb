@@ -11,7 +11,7 @@ module PunchCard
     # Good ole 8-bit ASCII
     module ASCII8
       def self.encode(str, format)
-        if format == IBM5081
+        if format == Formats::IBM5081
           encode_IBM5081(str, format.new)
         else
           raise UnsupportedCardFormat.create(format)
