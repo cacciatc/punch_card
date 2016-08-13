@@ -5,7 +5,7 @@ Create punch cards in various formats and save as PNGs.
 ## Supported Cards and Formats
 
 * IBM 5081
-	* ASCII 8-bit
+	* ASCII 8-bit (WIP)
 
 ## Installation
 
@@ -33,12 +33,17 @@ include PunchCard
 # create a card containing the letters A, B, C
 card = Encodings::ASCII8.encode('ABC', Formats::IBM5081)
 
+# comment
+card.comments = 'ABC'
+
 # save to file
 card.to_txt('card.txt')
 ```
 
-```Batchfile
+```
 $ cat card.txt
+IBM5081 created 12 August 2016 - 11:34:23 
+A B C
 X X X
 
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
