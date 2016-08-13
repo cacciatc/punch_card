@@ -85,6 +85,10 @@ module PunchCard
             table[c] = EncodingSymbol.new([0, c.ord + 1 - 'S'.ord + 1], c)
           end
         end
+
+        ('0'..'9').each do |c|
+          table[c] = EncodingSymbol.new([c.ord - '0'.ord], c)
+        end
       end
     end
   end
