@@ -25,6 +25,41 @@ module PunchCard
       def_delegator :@a, :[], :[]
       def_delegator :@a, :length, :length
       def_delegator :@a, :each, :each
+
+      def to_txt(fname)
+        File.open(fname, 'w') do |f|
+          rows = to_rows
+          f.puts(format_row(rows[11], 11))
+          f.puts(format_row(rows[10], 10))
+
+          rows[0..ROWS - 2].each_with_index do |row, i|
+            f.puts(format_row(row, i))
+          end
+        end
+      end
+
+      def format_cell(cell, row)
+        if cell == PUNCH
+          'X'
+        else
+          [11, 10].include?(row) ? ' ' : row
+        end
+      end
+
+      def format_row(row, index)
+        row.collect { |cell| format_cell(cell, index) }.join(' ')
+      end
+
+      def to_rows
+        rows = Array.new(ROWS) { [] }
+        @a.each do |row|
+          ROWS.times do |i|
+            rows[i] << row[i]
+          end
+        end
+
+        rows
+      end
     end
   end
 end
