@@ -49,7 +49,7 @@ module PunchCard
         str += format_row(rows[11], 11) + "\n"
         str += format_row(rows[10], 10) + "\n"
 
-        rows[0..ROWS - 2].each_with_index do |row, i|
+        rows[0..ROWS - 3].each_with_index do |row, i|
           str += format_row(row, i) + "\n"
         end
 

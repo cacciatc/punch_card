@@ -18,6 +18,7 @@ describe 'ASCII8' do
       expected = '01'.rjust(i + 2, '0') + '1'.rjust(10 - i, '0')
       card_str = card[i].join
 
+      assert card_str.length == 12
       assert card_str == expected,
              "The card did not encode the letter '#{l}'. " \
              "Column was #{card_str}; should have been #{expected}."
@@ -28,6 +29,7 @@ describe 'ASCII8' do
       expected = '01'.rjust(i + 2, '0') + '10'.rjust(10 - i, '0')
       card_str = card[i + offset].join
 
+      assert card_str.length == 12
       assert card_str == expected,
              "The card did not encode the letter '#{l}'. " \
              "Column was #{card_str}; should have been #{expected}."
@@ -38,6 +40,7 @@ describe 'ASCII8' do
       expected = '1' + '1'.rjust(i + 2, '0') + '0'.rjust(9 - i, '0')
       card_str = card[i + offset].join
 
+      assert card_str.length == 12
       assert card_str == expected,
              "The card did not encode the letter '#{l}'. " \
              "Column was #{card_str}; should have been #{expected}."
@@ -51,7 +54,7 @@ describe 'ASCII8' do
     letters = PunchCard::Encodings::ASCII8.decode(card)
     assert letters.rstrip == expected,
            'The card did not decode successfully. ' \
-      			"The card decoded to #{letters}; should have been #{expected}."
+      		 "The card decoded to #{letters}; should have been #{expected}."
   end
 
   it 'should encode the digits 0-9' do
@@ -59,12 +62,70 @@ describe 'ASCII8' do
     card = PunchCard::Encodings::ASCII8.encode(expected, IBM5081)
 
     ('0'..'9').each_with_index do |l, i|
-      expected = '1'.rjust(i + 1, '0') + '0'.ljust(11 - i, '0')
+      expected = '1'.rjust(i + 1, '0') + '0'.rjust(11 - i, '0')
       card_str = card[i].join
 
+      assert card_str.length == 12
       assert card_str == expected,
              "The card did not encode the digit '#{l}'. " \
              "Column was #{card_str}; should have been #{expected}."
     end
+  end
+
+  it 'should decode the digits 0-9' do
+    expected = ('0'..'9').to_a.join('')
+    card = PunchCard::Encodings::ASCII8.encode(expected, IBM5081)
+
+    digits = PunchCard::Encodings::ASCII8.decode(card)
+    assert digits.rstrip == expected,
+           'The card did not decode successfully. ' \
+      		 "The card decoded to #{digits}; should have been #{expected}."
+  end
+
+  it 'should encode the alphabet in lower case' do
+    expected = ('a'..'z').to_a.join('')
+    card = PunchCard::Encodings::ASCII8.encode(expected, IBM5081)
+
+    ('a'..'i').each_with_index do |l, i|
+      expected = '1' + '1'.rjust(i + 1, '0') + '1'.rjust(10 - i, '0')
+      card_str = card[i].join
+
+      assert card_str.length == 12
+      assert card_str == expected,
+             "The card did not encode the leter '#{l}'. " \
+             "Column was #{card_str}; should have been #{expected}."
+    end
+
+    offset = 9
+    ('j'..'r').each_with_index do |l, i|
+      expected = '0' + '1'.rjust(i + 1, '0') + '11'.rjust(10 - i, '0')
+      card_str = card[i + offset].join
+
+      assert card_str.length == 12
+      assert card_str == expected,
+             "The card did not encode the letter '#{l}'. " \
+             "Column was #{card_str}; should have been #{expected}."
+    end
+
+    offset = 18
+    ('s'..'z').each_with_index do |l, i|
+      expected = '1' + '01'.rjust(i + 2, '0') + '10'.rjust(9 - i, '0')
+      card_str = card[i + offset].join
+
+      assert card_str.length == 12
+      assert card_str == expected,
+             "The card did not encode the letter '#{l}'. " \
+             "Column was #{card_str}; should have been #{expected}."
+    end
+  end
+
+  it 'should decode the alphabet in lower case' do
+    expected = ('a'..'z').to_a.join('')
+    card = PunchCard::Encodings::ASCII8.encode(expected, IBM5081)
+
+    letters = PunchCard::Encodings::ASCII8.decode(card)
+    assert letters.rstrip == expected,
+           'The card did not decode successfully. ' \
+      		 "The card decoded to #{letters}; should have been #{expected}."
   end
 end

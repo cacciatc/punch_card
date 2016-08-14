@@ -19,11 +19,20 @@ module PunchCard
       end
     end
 
+    # Not all column patterns are good.
+    class BadColumnPattern < StandardError
+      def self.create(pattern, _encoding)
+        msg = "#{pattern} is not valid encoding."
+        BadColumnPattern.new(msg)
+      end
+    end
+
     # Represents a symbol in a column
     class EncodingSymbol
       attr_reader :symbol
       # TODO: assumes 12 rows per col, should be flexible
       def initialize(pattern, symbol)
+        raise BadColumnPattern.create unless pattern.length <= 12
         @pattern = pattern
         @symbol  = symbol
         @col     = Array.new(12) { CLEAR }
@@ -41,6 +50,8 @@ module PunchCard
         @pattern.each do |row|
           card[col][row] = PUNCH
         end
+
+        card
       end
     end
   end

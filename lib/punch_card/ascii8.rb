@@ -44,7 +44,6 @@ module PunchCard
 
       # TODO: this is brute force search, could be optimized
       def self.decode_column(col)
-        table = get_or_build_table
         result = table.detect do |_k, encoding_sym|
           encoding_sym.decodable?(col)
         end
@@ -61,12 +60,10 @@ module PunchCard
       end
 
       def self.lookup_symbol(char)
-        table = get_or_build_table
-
         table[char] || (raise UnsupportedCharacter.create(char, ASCII8))
       end
 
-      def self.get_or_build_table
+      def self.table
         create_symbols(@@table) if @@table.empty?
         @@table
       end
@@ -88,6 +85,17 @@ module PunchCard
 
         ('0'..'9').each do |c|
           table[c] = EncodingSymbol.new([c.ord - '0'.ord], c)
+        end
+
+        ('a'..'z').each do |c|
+          case c
+          when 'a'..'i'
+            table[c] = EncodingSymbol.new([11, 0, c.ord - 'a'.ord + 1], c)
+          when 'j'..'r'
+            table[c] = EncodingSymbol.new([11, 10, c.ord - 'j'.ord + 1], c)
+          when 's'..'z'
+            table[c] = EncodingSymbol.new([10, 0, c.ord + 1 - 's'.ord + 1], c)
+          end
         end
       end
     end
