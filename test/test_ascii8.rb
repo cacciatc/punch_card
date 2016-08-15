@@ -128,4 +128,33 @@ describe 'ASCII8' do
            'The card did not decode successfully. ' \
       		 "The card decoded to #{letters}; should have been #{expected}."
   end
+
+  it 'should encode "-", "&", and " "' do
+    card = PunchCard::Encodings::ASCII8.encode('-& ', IBM5081)
+    expected_minus = '000000000010'
+    expected_amper = '000000000001'
+    expected_space = '000000000000'
+
+    assert card[0].join == expected_minus,
+           "The card did not encode '-'. " \
+           "Column was #{card[0].join}; should have been #{expected_minus}."
+
+    assert card[1].join == expected_amper,
+           "The card did not encode '&'. " \
+           "Column was #{card[1].join}; should have been #{expected_amper}."
+
+    assert card[2].join == expected_space,
+           "The card did not encode ' '. " \
+           "Column was #{card[2].join}; should have been #{expected_space}."
+  end
+
+  it 'should decode "-", "&", and " "' do
+    card = PunchCard::Encodings::ASCII8.encode('-& -', IBM5081)
+    expected = '-& -'
+
+    letters = PunchCard::Encodings::ASCII8.decode(card)
+    assert letters.rstrip == expected,
+           'The card did not decode successfully. ' \
+      		 "The card decoded to #{letters}; should have been #{expected}."
+  end
 end

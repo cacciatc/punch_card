@@ -97,6 +97,9 @@ module PunchCard
             table[c] = EncodingSymbol.new([10, 0, c.ord + 1 - 's'.ord + 1], c)
           end
         end
+
+        table['-'] = EncodingSymbol.new([10], '-')
+        table['&'] = EncodingSymbol.new([11], '&')
       end
     end
   end
