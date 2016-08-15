@@ -1,5 +1,7 @@
 # PunchCard
 
+[![Build Status](https://travis-ci.org/cacciatc/punch_card.svg?branch=master)](https://travis-ci.org/cacciatc/punch_card)
+
 Create punch cards in various formats and save as PNGs.
 
 ## Supported Cards and Formats
