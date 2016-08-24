@@ -57,6 +57,9 @@ X 7 7 7 7 7 7 7 7 7 X 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
 9 9 9 9 9 9 9 X 9 9 9 9 9 9 9 9 9 X 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
 ```
 
+## References
+http://www.quadibloc.com/comp/cardint.htm
+
 ## Contributing
 
 1. Fork it ( https://github.com/cacciatc/punch_card/fork )
